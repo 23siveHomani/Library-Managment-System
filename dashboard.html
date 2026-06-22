@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryMS - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: white;
+            border-right: 1px solid #dce1e8;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+        }
+        .sidebar-logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-logo .icon {
+            width: 32px;
+            height: 32px;
+            background: #185FA5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        .sidebar-logo h2 {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        .sidebar-logo span {
+            font-size: 11px;
+            color: #7F8C8D;
+        }
+        .nav {
+            flex: 1;
+            padding: 16px 0;
+        }
+        .nav-section {
+            font-size: 10px;
+            font-weight: 600;
+            color: #95a5a6;
+            padding: 8px 20px 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            color: #5a6c7d;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background: #f5f8fa;
+        }
+        .nav-item.active {
+            color: #185FA5;
+            background: #E6F1FB;
+            border-left-color: #185FA5;
+            font-weight: 500;
+        }
+        .nav-item i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E6F1FB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #185FA5;
+        }
+        /* Main Content */
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 0;
+        }
+        .topbar {
+            background: white;
+            padding: 12px 24px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar h1 {
+            font-size: 18px;
+            color: #2C3E50;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .topbar-right input {
+            padding: 6px 12px;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .badge-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: #E24B4A;
+            border-radius: 50%;
+        }
+        .content {
+            padding: 24px;
+        }
+        .welcome {
+            margin-bottom: 24px;
+        }
+        .welcome h2 {
+            font-size: 22px;
+            color: #2C3E50;
+        }
+        .welcome p {
+            color: #7F8C8D;
+            font-size: 14px;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border: 1px solid #dce1e8;
+        }
+        .stat-card .label {
+            font-size: 12px;
+            color: #7F8C8D;
+            margin-bottom: 4px;
+        }
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+        .stat-card .delta {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .delta-up {
+            background: #E1F5EE;
+            color: #0F6E56;
+        }
+        .delta-dn {
+            background: #FCEBEB;
+            color: #A32D2D;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 16px;
+        }
+        .card {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border: 1px solid #dce1e8;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .card-header h3 {
+            font-size: 14px;
+            color: #2C3E50;
+        }
+        .card-header a {
+            font-size: 12px;
+            color: #185FA5;
+            text-decoration: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th {
+            text-align: left;
+            font-size: 11px;
+            color: #7F8C8D;
+            padding: 6px 10px;
+            border-bottom: 1px solid #dce1e8;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        .pill {
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .pill-green {
+            background: #E1F5EE;
+            color: #0F6E56;
+        }
+        .pill-amber {
+            background: #FAEEDA;
+            color: #854F0B;
+        }
+        .pill-red {
+            background: #FCEBEB;
+            color: #A32D2D;
+        }
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .quick-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .quick-item:hover {
+            background: #e9ecef;
+        }
+        .quick-item .icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .logout-btn {
+            padding: 8px 16px;
+            background: #E24B4A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="icon">📚</div>
+            <div>
+                <h2>LibraryMS</h2>
+                <span>Management System</span>
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-section">Main</div>
+            <div class="nav-item active"><i>📊</i> Dashboard</div>
+            <div class="nav-item" onclick="location.href='book_catalogue.html'"><i>📖</i> Books</div>
+            <div class="nav-item" onclick="location.href='member_registration.html'"><i>👤</i> Members</div>
+            <div class="nav-item" onclick="location.href='issue_loan.html'"><i>🔄</i> Loans</div>
+            <div class="nav-section">Finance</div>
+            <div class="nav-item" onclick="location.href='fines_management.html'"><i>💰</i> Fines</div>
+            <div class="nav-section">Reports</div>
+            <div class="nav-item"><i>📊</i> Reports</div>
+            <div class="nav-item"><i>📋</i> Overdue</div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="avatar">NM</div>
+            <div>
+                <div style="font-size:13px;font-weight:500;">N. Mthembu</div>
+                <div style="font-size:11px;color:#7F8C8D;">Librarian</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <h1>Dashboard</h1>
+            <div class="topbar-right">
+                <input type="text" placeholder="Search anything...">
+                <div class="badge-btn">🔔<div class="badge-dot"></div></div>
+                <button class="logout-btn" onclick="location.href='login.html'">Logout</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="welcome">
+                <h2>Good morning, Nompumelelo</h2>
+                <p>Wednesday, 13 May 2026</p>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="label">📚 Total Books</div>
+                    <div class="value">4,280</div>
+                    <span class="delta delta-up">↑ 12 this week</span>
+                </div>
+                <div class="stat-card">
+                    <div class="label">👤 Active Members</div>
+                    <div class="value">1,034</div>
+                    <span class="delta delta-up">↑ 8 new</span>
+                </div>
+                <div class="stat-card">
+                    <div class="label">🔄 Active Loans</div>
+                    <div class="value">312</div>
+                    <span class="delta delta-dn">23 overdue</span>
+                </div>
+                <div class="stat-card">
+                    <div class="label">💰 Outstanding Fines</div>
+                    <div class="value">R 840</div>
+                    <span class="delta delta-dn">14 unpaid</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Loans</h3>
+                        <a href="#">View all →</a>
+                    </div>
+                    <table>
+                        <thead><tr><th>Member</th><th>Book</th><th>Due Date</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>S. Dlamini</td><td>1984</td><td>20 May</td><td><span class="pill pill-green">Active</span></td></tr>
+                            <tr><td>A. Nkosi</td><td>To Kill a Mockingbird</td><td>18 May</td><td><span class="pill pill-amber">Due soon</span></td></tr>
+                            <tr><td>L. Erasmus</td><td>Of Mice and Men</td><td>6 May</td><td><span class="pill pill-red">Overdue</span></td></tr>
+                            <tr><td>T. Mokoena</td><td>The Great Gatsby</td><td>22 May</td><td><span class="pill pill-green">Active</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="quick-actions">
+                        <div class="quick-item" onclick="location.href='book_catalogue.html'">
+                            <div class="icon" style="background:#E6F1FB;color:#185FA5;">📘</div>
+                            <div><div style="font-weight:500;">Add Book</div><div style="font-size:12px;color:#7F8C8D;">Add to catalogue</div></div>
+                        </div>
+                        <div class="quick-item" onclick="location.href='member_registration.html'">
+                            <div class="icon" style="background:#E1F5EE;color:#0F6E56;">👤</div>
+                            <div><div style="font-weight:500;">Register Member</div><div style="font-size:12px;color:#7F8C8D;">Create account</div></div>
+                        </div>
+                        <div class="quick-item" onclick="location.href='issue_loan.html'">
+                            <div class="icon" style="background:#FAEEDA;color:#854F0B;">🔄</div>
+                            <div><div style="font-weight:500;">Issue Loan</div><div style="font-size:12px;color:#7F8C8D;">Borrow book</div></div>
+                        </div>
+                        <div class="quick-item" onclick="location.href='fines_management.html'">
+                            <div class="icon" style="background:#FCEBEB;color:#A32D2D;">💰</div>
+                            <div><div style="font-weight:500;">Manage Fines</div><div style="font-size:12px;color:#7F8C8D;">View overdue</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

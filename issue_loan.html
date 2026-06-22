@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryMS - Issue Loan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background: white;
+            border-right: 1px solid #dce1e8;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+        }
+        .sidebar-logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-logo .icon {
+            width: 32px;
+            height: 32px;
+            background: #185FA5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        .sidebar-logo h2 {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        .sidebar-logo span {
+            font-size: 11px;
+            color: #7F8C8D;
+        }
+        .nav {
+            flex: 1;
+            padding: 16px 0;
+        }
+        .nav-section {
+            font-size: 10px;
+            font-weight: 600;
+            color: #95a5a6;
+            padding: 8px 20px 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            color: #5a6c7d;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background: #f5f8fa;
+        }
+        .nav-item.active {
+            color: #185FA5;
+            background: #E6F1FB;
+            border-left-color: #185FA5;
+            font-weight: 500;
+        }
+        .main {
+            margin-left: 220px;
+            flex: 1;
+        }
+        .topbar {
+            background: white;
+            padding: 12px 24px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar h1 {
+            font-size: 18px;
+            color: #2C3E50;
+        }
+        .breadcrumb {
+            font-size: 13px;
+            color: #7F8C8D;
+        }
+        .breadcrumb span {
+            color: #2C3E50;
+            font-weight: 500;
+        }
+        .logout-btn {
+            padding: 8px 16px;
+            background: #E24B4A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .content {
+            padding: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .form-card {
+            flex: 1;
+            background: white;
+            border: 1px solid #dce1e8;
+            border-radius: 8px;
+            padding: 20px 24px;
+        }
+        .form-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2C3E50;
+            margin-bottom: 4px;
+        }
+        .form-sub {
+            font-size: 13px;
+            color: #7F8C8D;
+            margin-bottom: 20px;
+        }
+        .divider {
+            height: 1px;
+            background: #dce1e8;
+            margin: 16px 0;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #5a6c7d;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .form-group input:focus {
+            border-color: #185FA5;
+            outline: none;
+        }
+        .lookup-box {
+            display: flex;
+            gap: 8px;
+        }
+        .lookup-box input {
+            flex: 1;
+        }
+        .lookup-box button {
+            padding: 8px 16px;
+            background: #185FA5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .lookup-result {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-top: 6px;
+            border: 1px solid #dce1e8;
+        }
+        .lr-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .lr-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2C3E50;
+        }
+        .lr-sub {
+            font-size: 12px;
+            color: #7F8C8D;
+        }
+        .lr-pill {
+            margin-left: auto;
+            font-size: 11px;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .input-row {
+            display: flex;
+            gap: 16px;
+        }
+        .input-row .form-group {
+            flex: 1;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-primary {
+            padding: 10px 24px;
+            background: #185FA5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary:hover {
+            background: #0f4a7a;
+        }
+        .btn-sec {
+            padding: 10px 20px;
+            background: transparent;
+            color: #5a6c7d;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-sec:hover {
+            background: #f5f8fa;
+        }
+        .summary-card {
+            width: 260px;
+            background: white;
+            border: 1px solid #dce1e8;
+            border-radius: 8px;
+            padding: 18px 20px;
+            flex-shrink: 0;
+        }
+        .summary-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2C3E50;
+            margin-bottom: 14px;
+        }
+        .sum-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        .sum-row:last-child {
+            border-bottom: none;
+        }
+        .sum-label {
+            color: #7F8C8D;
+        }
+        .sum-val {
+            color: #2C3E50;
+            font-weight: 500;
+        }
+        .info-box {
+            background: #E6F1FB;
+            border: 1px solid #B5D4F4;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #185FA5;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E6F1FB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #185FA5;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="icon">📚</div>
+            <div>
+                <h2>LibraryMS</h2>
+                <span>Management System</span>
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-section">Main</div>
+            <div class="nav-item" onclick="location.href='dashboard.html'">📊 Dashboard</div>
+            <div class="nav-item" onclick="location.href='book_catalogue.html'">📖 Books</div>
+            <div class="nav-item" onclick="location.href='member_registration.html'">👤 Members</div>
+            <div class="nav-item active">🔄 Loans</div>
+            <div class="nav-section">Finance</div>
+            <div class="nav-item" onclick="location.href='fines_management.html'">💰 Fines</div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="avatar">NM</div>
+            <div>
+                <div style="font-size:13px;font-weight:500;">N. Mthembu</div>
+                <div style="font-size:11px;color:#7F8C8D;">Librarian</div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <div>
+                <div class="breadcrumb">Loans / <span>Issue new loan</span></div>
+            </div>
+            <button class="logout-btn" onclick="location.href='login.html'">Logout</button>
+        </div>
+
+        <div class="content">
+            <div class="form-card">
+                <div class="form-title">Issue Book Loan</div>
+                <div class="form-sub">Find a member and book, then confirm the loan.</div>
+                <div class="divider"></div>
+
+                <div class="form-group">
+                    <label>Member lookup</label>
+                    <div class="lookup-box">
+                        <input type="text" placeholder="Search by name or member ID..." value="Sipho Dlamini">
+                        <button>🔍 Find</button>
+                    </div>
+                    <div class="lookup-result">
+                        <div class="lr-avatar" style="background:#E6F1FB;color:#185FA5;">SD</div>
+                        <div>
+                            <div class="lr-name">Sipho Dlamini</div>
+                            <div class="lr-sub">Member ID: M001 · Active member</div>
+                        </div>
+                        <div class="lr-pill" style="background:#E1F5EE;color:#0F6E56;">0 fines</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Book lookup</label>
+                    <div class="lookup-box">
+                        <input type="text" placeholder="Search by title, author or ISBN..." value="1984">
+                        <button>🔍 Find</button>
+                    </div>
+                    <div class="lookup-result">
+                        <div class="lr-avatar" style="background:#EEEDFE;color:#534AB7;">📘</div>
+                        <div>
+                            <div class="lr-name">1984</div>
+                            <div class="lr-sub">George Orwell · ISBN 978-0-7432-7356-5</div>
+                        </div>
+                        <div class="lr-pill" style="background:#E1F5EE;color:#0F6E56;">Available</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                <div class="input-row">
+                    <div class="form-group">
+                        <label>Issue date</label>
+                        <input type="text" value="13 May 2026" readonly style="background:#f5f8fa;">
+                    </div>
+                    <div class="form-group">
+                        <label>Due date (14 days)</label>
+                        <input type="text" value="27 May 2026" readonly style="background:#f5f8fa;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes (optional)</label>
+                    <input type="text" placeholder="Any special notes about this loan...">
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="alert('Loan issued successfully!')">✅ Issue Loan</button>
+                    <button class="btn-sec">Cancel</button>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">Loan Summary</div>
+                <div class="sum-row"><span class="sum-label">Member</span><span class="sum-val">S. Dlamini</span></div>
+                <div class="sum-row"><span class="sum-label">Member ID</span><span class="sum-val">M001</span></div>
+                <div class="sum-row"><span class="sum-label">Book</span><span class="sum-val">1984</span></div>
+                <div class="sum-row"><span class="sum-label">Book ID</span><span class="sum-val">B002</span></div>
+                <div class="sum-row"><span class="sum-label">Issue date</span><span class="sum-val">13 May 2026</span></div>
+                <div class="sum-row"><span class="sum-label">Due date</span><span class="sum-val">27 May 2026</span></div>
+                <div class="sum-row"><span class="sum-label">Loan period</span><span class="sum-val">14 days</span></div>
+                <div class="sum-row"><span class="sum-label">Fine rate</span><span class="sum-val">R 2.00 / day</span></div>
+                <div class="info-box">
+                    💡 A fine of R 2.00 per day will apply automatically if the book is returned late.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

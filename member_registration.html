@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryMS - Member Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background: white;
+            border-right: 1px solid #dce1e8;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+        }
+        .sidebar-logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-logo .icon {
+            width: 32px;
+            height: 32px;
+            background: #185FA5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        .sidebar-logo h2 {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        .sidebar-logo span {
+            font-size: 11px;
+            color: #7F8C8D;
+        }
+        .nav {
+            flex: 1;
+            padding: 16px 0;
+        }
+        .nav-section {
+            font-size: 10px;
+            font-weight: 600;
+            color: #95a5a6;
+            padding: 8px 20px 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            color: #5a6c7d;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background: #f5f8fa;
+        }
+        .nav-item.active {
+            color: #185FA5;
+            background: #E6F1FB;
+            border-left-color: #185FA5;
+            font-weight: 500;
+        }
+        .main {
+            margin-left: 220px;
+            flex: 1;
+        }
+        .topbar {
+            background: white;
+            padding: 12px 24px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar h1 {
+            font-size: 18px;
+            color: #2C3E50;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logout-btn {
+            padding: 8px 16px;
+            background: #E24B4A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .content {
+            padding: 24px;
+            max-width: 800px;
+        }
+        .steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 24px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .step.active .step-num {
+            background: #185FA5;
+            color: white;
+        }
+        .step.done .step-num {
+            background: #0F6E56;
+            color: white;
+        }
+        .step.todo .step-num {
+            background: #e9ecef;
+            color: #7F8C8D;
+        }
+        .step.active .step-label {
+            color: #2C3E50;
+            font-weight: 500;
+        }
+        .step.todo .step-label {
+            color: #95a5a6;
+        }
+        .step.done .step-label {
+            color: #0F6E56;
+        }
+        .step-sep {
+            flex: 1;
+            height: 1px;
+            background: #dce1e8;
+            margin: 0 12px;
+            max-width: 60px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #dce1e8;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #2C3E50;
+            margin-bottom: 4px;
+        }
+        .card-sub {
+            font-size: 13px;
+            color: #7F8C8D;
+            margin-bottom: 16px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 16px;
+        }
+        .form-grid .full {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #5a6c7d;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #185FA5;
+            outline: none;
+        }
+        .field-valid {
+            border-color: #27AE60 !important;
+        }
+        .field-err {
+            border-color: #E24B4A !important;
+        }
+        .err-msg {
+            font-size: 11px;
+            color: #E24B4A;
+            margin-top: 3px;
+        }
+        .valid-msg {
+            font-size: 11px;
+            color: #27AE60;
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .type-opt {
+            border: 2px solid #dce1e8;
+            border-radius: 8px;
+            padding: 14px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .type-opt:hover {
+            border-color: #185FA5;
+        }
+        .type-opt.selected {
+            border-color: #185FA5;
+            background: #E6F1FB;
+        }
+        .type-opt .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .type-opt .name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #2C3E50;
+        }
+        .type-opt .sub {
+            font-size: 11px;
+            color: #7F8C8D;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+        .btn-primary {
+            padding: 10px 24px;
+            background: #185FA5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: #0f4a7a;
+        }
+        .btn-sec {
+            padding: 10px 20px;
+            background: transparent;
+            color: #5a6c7d;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-sec:hover {
+            background: #f5f8fa;
+        }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E6F1FB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #185FA5;
+        }
+
+        /* Step 2 - Contact Details (hidden by default) */
+        .step-content {
+            display: block;
+        }
+        .step-content.hidden {
+            display: none;
+        }
+
+        /* Success message */
+        .success-msg {
+            background: #E1F5EE;
+            color: #0F6E56;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border: 1px solid #A8D5C4;
+            display: none;
+            margin-bottom: 16px;
+        }
+        .success-msg.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="icon">📚</div>
+            <div>
+                <h2>LibraryMS</h2>
+                <span>Management System</span>
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-section">Main</div>
+            <div class="nav-item" onclick="location.href='dashboard.html'">📊 Dashboard</div>
+            <div class="nav-item" onclick="location.href='book_catalogue.html'">📖 Books</div>
+            <div class="nav-item active">👤 Members</div>
+            <div class="nav-item" onclick="location.href='issue_loan.html'">🔄 Loans</div>
+            <div class="nav-section">Finance</div>
+            <div class="nav-item" onclick="location.href='fines_management.html'">💰 Fines</div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="avatar">NM</div>
+            <div>
+                <div style="font-size:13px;font-weight:500;">N. Mthembu</div>
+                <div style="font-size:11px;color:#7F8C8D;">Librarian</div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>Register New Member</h1>
+            <div class="topbar-right">
+                <span style="font-size:13px;color:#7F8C8D;" id="stepIndicator">Step 1 of 3</span>
+                <button class="logout-btn" onclick="location.href='login.html'">Logout</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Success Message -->
+            <div class="success-msg" id="successMsg">
+                ✅ Member registered successfully! Welcome to the library.
+            </div>
+
+            <!-- Steps -->
+            <div class="steps">
+                <div class="step active" id="step1Indicator">
+                    <div class="step-num">1</div>
+                    <span class="step-label">Personal info</span>
+                </div>
+                <div class="step-sep"></div>
+                <div class="step todo" id="step2Indicator">
+                    <div class="step-num">2</div>
+                    <span class="step-label">Contact details</span>
+                </div>
+                <div class="step-sep"></div>
+                <div class="step todo" id="step3Indicator">
+                    <div class="step-num">3</div>
+                    <span class="step-label">Membership type</span>
+                </div>
+            </div>
+
+            <!-- ===== STEP 1: Personal Information ===== -->
+            <div class="step-content" id="step1Content">
+                <div class="card">
+                    <div class="card-title">Personal Information</div>
+                    <div class="card-sub">Enter the member's personal details as they appear on their ID document.</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>First name</label>
+                            <input type="text" value="Amahle" class="field-valid" id="firstName">
+                            <div class="valid-msg">✓ Looks good</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Last name</label>
+                            <input type="text" value="Nkosi" class="field-valid" id="lastName">
+                            <div class="valid-msg">✓ Looks good</div>
+                        </div>
+                        <div class="form-group">
+                            <label>ID number</label>
+                            <input type="text" value="9506236789012" class="field-valid" id="idNumber">
+                            <div class="valid-msg">✓ Valid SA ID</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Date of birth</label>
+                            <input type="text" value="23 Jun 1995" readonly style="background:#f5f8fa;">
+                        </div>
+                        <div class="form-group full">
+                            <label>Email address</label>
+                            <input type="email" value="amahle.nkosi@" class="field-err" id="email">
+                            <div class="err-msg">Please enter a valid email address</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone number</label>
+                            <input type="text" placeholder="+27 XX XXX XXXX" id="phone">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="gender">
+                                <option>Female</option>
+                                <option>Male</option>
+                                <option>Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-sec">Cancel</button>
+                    <button class="btn-primary" onclick="goToStep(2)">Next: Contact details →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 2: Contact Details ===== -->
+            <div class="step-content hidden" id="step2Content">
+                <div class="card">
+                    <div class="card-title">Contact Details</div>
+                    <div class="card-sub">Enter the member's contact information.</div>
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label>Physical Address</label>
+                            <input type="text" placeholder="Street address" value="123 Main Street">
+                        </div>
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" placeholder="City" value="Johannesburg">
+                        </div>
+                        <div class="form-group">
+                            <label>Postal Code</label>
+                            <input type="text" placeholder="Postal code" value="2001">
+                        </div>
+                        <div class="form-group full">
+                            <label>Alternative Phone</label>
+                            <input type="text" placeholder="Alternative phone number">
+                        </div>
+                        <div class="form-group full">
+                            <label>Emergency Contact</label>
+                            <input type="text" placeholder="Emergency contact name and number">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-sec" onclick="goToStep(1)">← Back</button>
+                    <button class="btn-primary" onclick="goToStep(3)">Next: Membership type →</button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 3: Membership Type ===== -->
+            <div class="step-content hidden" id="step3Content">
+                <div class="card">
+                    <div class="card-title">Membership Type</div>
+                    <div class="card-sub">Select the membership category for this member.</div>
+                    <div class="type-grid">
+                        <div class="type-opt selected" onclick="selectType(this)">
+                            <span class="icon">👤</span>
+                            <div class="name">Standard</div>
+                            <div class="sub">3 books · 14 days</div>
+                        </div>
+                        <div class="type-opt" onclick="selectType(this)">
+                            <span class="icon">🎓</span>
+                            <div class="name">Student</div>
+                            <div class="sub">5 books · 21 days</div>
+                        </div>
+                        <div class="type-opt" onclick="selectType(this)">
+                            <span class="icon">💼</span>
+                            <div class="name">Premium</div>
+                            <div class="sub">10 books · 30 days</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-sec" onclick="goToStep(2)">← Back</button>
+                    <button class="btn-primary" onclick="registerMember()">✅ Register Member</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Select membership type
+        function selectType(el) {
+            document.querySelectorAll('.type-opt').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // Navigate between steps
+        function goToStep(step) {
+            // Hide all step contents
+            document.getElementById('step1Content').classList.add('hidden');
+            document.getElementById('step2Content').classList.add('hidden');
+            document.getElementById('step3Content').classList.add('hidden');
+
+            // Show selected step
+            if (step === 1) document.getElementById('step1Content').classList.remove('hidden');
+            else if (step === 2) document.getElementById('step2Content').classList.remove('hidden');
+            else if (step === 3) document.getElementById('step3Content').classList.remove('hidden');
+
+            // Update step indicators
+            const steps = ['step1Indicator', 'step2Indicator', 'step3Indicator'];
+            steps.forEach((id, index) => {
+                const el = document.getElementById(id);
+                el.classList.remove('active', 'done', 'todo');
+                if (index + 1 === step) {
+                    el.classList.add('active');
+                } else if (index + 1 < step) {
+                    el.classList.add('done');
+                } else {
+                    el.classList.add('todo');
+                }
+            });
+
+            // Update step indicator text
+            document.getElementById('stepIndicator').textContent = 'Step ' + step + ' of 3';
+        }
+
+        // Register member (Step 3)
+        function registerMember() {
+            // Show success message
+            document.getElementById('successMsg').classList.add('show');
+
+            // Disable the button
+            const btn = document.querySelector('.btn-primary');
+            btn.textContent = '✅ Registered!';
+            btn.style.background = '#0F6E56';
+            btn.disabled = true;
+
+            // Hide the registration form after 2 seconds
+            setTimeout(function() {
+                document.getElementById('step3Content').classList.add('hidden');
+                // Optionally redirect to member list or dashboard
+                // window.location.href = 'member_list.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryMS - Book Catalogue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background: white;
+            border-right: 1px solid #dce1e8;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+        }
+        .sidebar-logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-logo .icon {
+            width: 32px;
+            height: 32px;
+            background: #185FA5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        .sidebar-logo h2 {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        .sidebar-logo span {
+            font-size: 11px;
+            color: #7F8C8D;
+        }
+        .nav {
+            flex: 1;
+            padding: 16px 0;
+        }
+        .nav-section {
+            font-size: 10px;
+            font-weight: 600;
+            color: #95a5a6;
+            padding: 8px 20px 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            color: #5a6c7d;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background: #f5f8fa;
+        }
+        .nav-item.active {
+            color: #185FA5;
+            background: #E6F1FB;
+            border-left-color: #185FA5;
+            font-weight: 500;
+        }
+        .main {
+            margin-left: 220px;
+            flex: 1;
+        }
+        .topbar {
+            background: white;
+            padding: 12px 24px;
+            border-bottom: 1px solid #dce1e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar h1 {
+            font-size: 18px;
+            color: #2C3E50;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logout-btn {
+            padding: 8px 16px;
+            background: #E24B4A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .content {
+            padding: 24px;
+        }
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .toolbar input, .toolbar select {
+            padding: 8px 12px;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .toolbar input {
+            flex: 1;
+            min-width: 200px;
+        }
+        .btn-primary {
+            padding: 8px 16px;
+            background: #185FA5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .book-card {
+            background: white;
+            border: 1px solid #dce1e8;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .book-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .book-cover {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        .book-body {
+            padding: 12px 14px 14px;
+        }
+        .book-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2C3E50;
+            margin-bottom: 2px;
+        }
+        .book-author {
+            font-size: 12px;
+            color: #7F8C8D;
+            margin-bottom: 8px;
+        }
+        .book-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .genre-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .avail {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .avail-yes {
+            color: #0F6E56;
+        }
+        .avail-no {
+            color: #A32D2D;
+        }
+        .pagination {
+            display: flex;
+            gap: 6px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        .pg-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #5a6c7d;
+        }
+        .pg-btn.active {
+            background: #185FA5;
+            color: white;
+            border-color: #185FA5;
+        }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #dce1e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E6F1FB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #185FA5;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="icon">📚</div>
+            <div>
+                <h2>LibraryMS</h2>
+                <span>Management System</span>
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-section">Main</div>
+            <div class="nav-item" onclick="location.href='dashboard.html'">📊 Dashboard</div>
+            <div class="nav-item active">📖 Books</div>
+            <div class="nav-item" onclick="location.href='member_registration.html'">👤 Members</div>
+            <div class="nav-item" onclick="location.href='issue_loan.html'">🔄 Loans</div>
+            <div class="nav-section">Finance</div>
+            <div class="nav-item" onclick="location.href='fines_management.html'">💰 Fines</div>
+            <div class="nav-section">Reports</div>
+            <div class="nav-item">📊 Reports</div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="avatar">NM</div>
+            <div>
+                <div style="font-size:13px;font-weight:500;">N. Mthembu</div>
+                <div style="font-size:11px;color:#7F8C8D;">Librarian</div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>Book Catalogue</h1>
+            <div class="topbar-right">
+                <span style="font-size:13px;color:#7F8C8D;">4,280 books total</span>
+                <button class="logout-btn" onclick="location.href='login.html'">Logout</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="toolbar">
+                <input type="text" placeholder="Search by title, author or ISBN...">
+                <select><option>All genres</option><option>Fiction</option><option>Science</option><option>History</option></select>
+                <select><option>All status</option><option>Available</option><option>On loan</option></select>
+                <button class="btn-primary" onclick="alert('Add new book form opened')">+ Add Book</button>
+            </div>
+
+            <div class="book-grid">
+                <div class="book-card">
+                    <div class="book-cover" style="background:#E6F1FB;">📘</div>
+                    <div class="book-body">
+                        <div class="book-title">1984</div>
+                        <div class="book-author">George Orwell</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#E6F1FB;color:#185FA5;">Dystopian</span>
+                            <span class="avail avail-yes">✓ Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background:#EEEDFE;">📙</div>
+                    <div class="book-body">
+                        <div class="book-title">To Kill a Mockingbird</div>
+                        <div class="book-author">Harper Lee</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#EEEDFE;color:#534AB7;">Fiction</span>
+                            <span class="avail avail-yes">✓ Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background:#EAF3DE;">📗</div>
+                    <div class="book-body">
+                        <div class="book-title">Of Mice and Men</div>
+                        <div class="book-author">John Steinbeck</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#EAF3DE;color:#3B6D11;">Classic</span>
+                            <span class="avail avail-no">✗ On loan</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background:#FAECE7;">📕</div>
+                    <div class="book-body">
+                        <div class="book-title">Brave New World</div>
+                        <div class="book-author">A. Huxley</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#FAECE7;color:#993C1D;">Sci-fi</span>
+                            <span class="avail avail-no">✗ On loan</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background:#FAEEDA;">📒</div>
+                    <div class="book-body">
+                        <div class="book-title">The Great Gatsby</div>
+                        <div class="book-author">F.S. Fitzgerald</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#FAEEDA;color:#854F0B;">Classic</span>
+                            <span class="avail avail-yes">✓ Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background:#E1F5EE;">📓</div>
+                    <div class="book-body">
+                        <div class="book-title">A Brief History of Time</div>
+                        <div class="book-author">S. Hawking</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#E1F5EE;color:#0F6E56;">Science</span>
+                            <span class="avail avail-yes">✓ Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background:#E6F1FB;">📘</div>
+                    <div class="book-body">
+                        <div class="book-title">Animal Farm</div>
+                        <div class="book-author">George Orwell</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#E6F1FB;color:#185FA5;">Fiction</span>
+                            <span class="avail avail-yes">✓ Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background:#FCEBEB;">📔</div>
+                    <div class="book-body">
+                        <div class="book-title">Long Walk to Freedom</div>
+                        <div class="book-author">N. Mandela</div>
+                        <div class="book-footer">
+                            <span class="genre-tag" style="background:#FCEBEB;color:#A32D2D;">

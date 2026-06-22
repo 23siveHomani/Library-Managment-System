@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryMS - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: #185FA5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 30px;
+            color: white;
+        }
+        .logo h1 {
+            font-size: 24px;
+            color: #2C3E50;
+        }
+        .logo p {
+            color: #7F8C8D;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #dce1e8;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #185FA5;
+            outline: none;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #185FA5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .login-btn:hover {
+            background: #0f4a7a;
+        }
+        .links {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 13px;
+            color: #7F8C8D;
+        }
+        .links a {
+            color: #185FA5;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .error-msg {
+            background: #fcebeb;
+            color: #A32D2D;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .role-opt {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: 2px solid #dce1e8;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .role-opt:hover {
+            border-color: #185FA5;
+        }
+        .role-opt.active {
+            border-color: #185FA5;
+            background: #E6F1FB;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon">📚</div>
+            <h1>LibraryMS</h1>
+            <p>Library Management System</p>
+        </div>
+
+        <div class="error-msg" id="errorMsg">Invalid username or password. Please try again.</div>
+
+        <div class="role-selector">
+            <div class="role-opt active" onclick="selectRole(this)">👤 Librarian</div>
+            <div class="role-opt" onclick="selectRole(this)">📖 Member</div>
+        </div>
+
+        <form onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter your username" value="librarian">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter your password" value="password123">
+            </div>
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+
+        <div class="links">
+            <a href="#">Forgot password?</a> · <a href="#">Register as new member</a>
+        </div>
+    </div>
+
+    <script>
+        function selectRole(el) {
+            document.querySelectorAll('.role-opt').forEach(r => r.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'librarian' && password === 'password123') {
+                window.location.href = 'dashboard.html';
+            } else if (username === 'member' && password === 'member123') {
+                window.location.href = 'member_portal.html';
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
